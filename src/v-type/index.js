@@ -5,16 +5,20 @@ import getInput from '../getInput'
 
 export default function (el, binding, types = {}) {
   let config = binding.value;
+  if(!config) return;
   el = getInput(el);
+  if(!el.value) return;
+  let newValue = regexVerification(el.value, config, {...defaultTypes, ...types});
 
   el.oninput = function (evt) {
     if (!evt.isTrusted) return;
+    el.value = regexVerification(el.value, config, {...defaultTypes, ...types}) || '';
     el.dispatchEvent(trigger('input'));
   };
 
-  let newValue = regexVerification(el.value, config, {...defaultTypes, ...types});
+
   if (newValue !== el.value) {
-    el.value = newValue;
+    el.value = newValue || '';
     el.dispatchEvent(trigger('input'));
   }
 }

@@ -5,6 +5,7 @@ import tokensDefault from './tokens';
 
 export default function (el, binding, tokens = {}) {
   const mask = binding.value;
+  if(!mask) return;
   el = getInput(el);
 
   el.oninput = function (evt) {

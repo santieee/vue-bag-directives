@@ -3,6 +3,7 @@ import getInput from '../getInput';
 
 export default function (el, binding) {
   let maxLength = binding.value;
+  if(!maxLength) return;
   el = getInput(el);
 
   el.oninput = function (evt) {

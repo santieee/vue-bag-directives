@@ -1,6 +1,6 @@
 {
   "name": "@vue-bag/directives",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -9,12 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "rollup": "^2.7.2",
+    "@babel/core": "^7.12.3",
+    "rollup": "^2.33.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
-    "@babel/preset-env": "^7.9.6"
+    "@babel/preset-env": "^7.12.1"
   }
 }

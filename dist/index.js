@@ -1,7 +1,7 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('core-js/modules/es.array.join'), require('core-js/modules/es.regexp.exec'), require('core-js/modules/es.string.match'), require('core-js/modules/es.array.slice')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'core-js/modules/es.array.join', 'core-js/modules/es.regexp.exec', 'core-js/modules/es.string.match', 'core-js/modules/es.array.slice'], factory) :
-  (global = global || self, factory(global.VueKit = {}));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('core-js/modules/es.array.slice'), require('core-js/modules/es.number.constructor'), require('core-js/modules/es.number.max-safe-integer'), require('core-js/modules/es.array.join'), require('core-js/modules/es.regexp.exec'), require('core-js/modules/es.string.match')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'core-js/modules/es.array.slice', 'core-js/modules/es.number.constructor', 'core-js/modules/es.number.max-safe-integer', 'core-js/modules/es.array.join', 'core-js/modules/es.regexp.exec', 'core-js/modules/es.string.match'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.VueKit = {}));
 }(this, (function (exports) { 'use strict';
 
   function _defineProperty(obj, key, value) {
@@ -147,7 +147,7 @@
   function getInput (el) {
     if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
       var els = el.getElementsByTagName('input');
-      if (els.length !== 1) throw new Error("v-type: requires 1 input, found " + els.length);else return els[0];
+      return els[0];
     } else {
       return el;
     }
@@ -227,14 +227,24 @@
   }
 
   var defaultTypes = {
-    'float': /^\d*\.?\d*/,
-    'number': /\d*/,
-    'word': /[A-zА-я]*\s?/g,
-    'ruWord': /[А-я]\s*/g
+    'float': {
+      pattern: /^\d*\.?\d*/,
+      type: Number
+    },
+    'number': {
+      pattern: /\d*/,
+      type: Number
+    },
+    'word': {
+      pattern: /[A-zА-я]*\s?/g
+    },
+    'ruWord': {
+      pattern: /[А-я]\s*/g
+    }
   };
 
-  function regexVerification(value, patternName, types) {
-    var regex = types[patternName];
+  function regexVerification(value, type) {
+    var regex = type.pattern;
     var result = value.match(regex);
     result = Array.isArray(result) ? result.join('') : result;
     return result;
@@ -242,15 +252,43 @@
 
   function index$1 (el, binding) {
     var types = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var config = binding.value;
-    if (!config) return;
+    var configName = binding.value;
+    if (!configName) return;
     el = getInput(el);
     if (!el.value) return;
-    var newValue = regexVerification(el.value, config, _objectSpread2(_objectSpread2({}, defaultTypes), types));
+
+    var allTypes = _objectSpread2(_objectSpread2({}, defaultTypes), types);
+
+    var config = allTypes[configName];
+    var newValue = regexVerification(el.value, config);
 
     el.oninput = function (evt) {
+      var _this = this;
+
       if (!evt.isTrusted) return;
-      el.value = regexVerification(el.value, config, _objectSpread2(_objectSpread2({}, defaultTypes), types)) || '';
+      var newValue = regexVerification(el.value, config) || '';
+
+      if (config.type && typeof config.type() === 'number') {
+        var isSafeInteger = function isSafeInteger(v) {
+          _newArrowCheck(this, _this);
+
+          return v < Number.MAX_SAFE_INTEGER;
+        }.bind(this);
+
+        if (!isSafeInteger(newValue)) {
+          var _toSafeInteger = function toSafeInteger(v) {
+            _newArrowCheck(this, _this);
+
+            var result = Number(String(v).slice(0, -1));
+            if (!isSafeInteger(result)) return _toSafeInteger(result);
+            return result;
+          }.bind(this);
+
+          newValue = _toSafeInteger(newValue);
+        }
+      }
+
+      el.value = newValue;
       el.dispatchEvent(trigger('input'));
     };
 

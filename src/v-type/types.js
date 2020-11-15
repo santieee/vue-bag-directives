@@ -1,6 +1,16 @@
 export default {
-  'float': /^\d*\.?\d*/,
-  'number': /\d*/,
-  'word': /[A-zА-я]*\s?/g,
-  'ruWord': /[А-я]\s*/g,
+  'float': {
+    pattern: /^\d*\.?\d*/,
+    type: Number,
+  },
+  'number':{
+    pattern: /\d*/,
+    type: Number,
+  },
+  'word': {
+    pattern: /[A-zА-я]*\s?/g,
+  },
+  'ruWord': {
+    pattern: /[А-я]\s*/g,
+  },
  };

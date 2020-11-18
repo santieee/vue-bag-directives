@@ -272,6 +272,7 @@
         var isSafeInteger = function isSafeInteger(v) {
           _newArrowCheck(this, _this);
 
+          if (String(v).length > 12) return false;
           return v < Number.MAX_SAFE_INTEGER;
         }.bind(this);
 

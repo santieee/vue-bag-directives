@@ -16,7 +16,10 @@ export default function (el, binding, types = {}) {
     if (!evt.isTrusted) return;
     let newValue = regexVerification(el.value, config) || '';
     if(config.type && typeof config.type() === 'number'){
-      const isSafeInteger = (v) => v  < Number.MAX_SAFE_INTEGER;
+      const isSafeInteger = (v) => {
+        if(String(v).length > 12) return false;
+        return v  < Number.MAX_SAFE_INTEGER
+      };
 
       if (!isSafeInteger(newValue)) {
         const toSafeInteger = (v) => {

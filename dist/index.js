@@ -272,6 +272,8 @@
         var isSafeInteger = function isSafeInteger(v) {
           _newArrowCheck(this, _this);
 
+          if (String(v) === '-') return true; //negative number
+
           if (String(v).length > 12) return false;
           return v < Number.MAX_SAFE_INTEGER;
         }.bind(this);
@@ -279,8 +281,6 @@
         if (!isSafeInteger(newValue)) {
           var _toSafeInteger = function toSafeInteger(v) {
             _newArrowCheck(this, _this);
-
-            if (String(v) === '-') return true; //negative number
 
             var result = Number(String(v).slice(0, -1));
             if (!isSafeInteger(result)) return _toSafeInteger(result);

@@ -17,6 +17,7 @@ export default function (el, binding, types = {}) {
     let newValue = regexVerification(el.value, config) || '';
     if(config.type && typeof config.type() === 'number'){
       const isSafeInteger = (v) => {
+        if(String(v) === '-') return true; //negative number
         if(String(v).length > 12) return false;
         return v  < Number.MAX_SAFE_INTEGER
       };

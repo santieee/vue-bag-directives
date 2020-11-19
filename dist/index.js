@@ -280,6 +280,8 @@
           var _toSafeInteger = function toSafeInteger(v) {
             _newArrowCheck(this, _this);
 
+            if (String(v) === '-') return true; //negative number
+
             var result = Number(String(v).slice(0, -1));
             if (!isSafeInteger(result)) return _toSafeInteger(result);
             return result;
